@@ -1,31 +1,25 @@
 const express = require('express');
 const app = express();
 const cors = require('cors')
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require("mongoose")
 
 
-app.use(cors());
+
 
 //DB connection
+const url = 'mongodb://localhost:27017/flights'; // URL to the local MongoDB server
 
-const url = 'mongodb://localhost:27017'; // URL to the local MongoDB server
 
-// Use connect method to connect to the server
-MongoClient.connect(url,async function(err, client) {
-    if (err) throw err;
-    console.log("Connected successfully to server");
-    // Select the database
-    const flights = client.db("flights"); 
-    await flights.find({}).toArray().then((result)=>{
-        console.log(result);
-        return result.json({result})
-    }).catch(()=>{
-        return resizeBy.json({
-            error:"error"
-        })
-    });
+//changed connnection
+mongoose.connect(url).then(() => {
+    console.log("Data Base")
+})
+.catch(()=> {
+    console.log(error);
 })
 
+//middlewares
+app.use(cors());
 
 
 //routes
@@ -39,8 +33,6 @@ app.use("/api",flightRoutes);
 
 //PORT
 const PORT = 8000;
-
-
 //RUN server
 app.listen(PORT, ()=>{
     console.log(`App running on ${PORT}`);
